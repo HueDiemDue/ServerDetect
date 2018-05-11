@@ -1,14 +1,14 @@
-package hue;
+package test;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.opencv.core.MatOfRect;
-import org.opencv.core.Point;
 import org.opencv.core.Rect;
+import org.opencv.core.Size;
+import org.opencv.core.Point;
 
-import models.HeapList;
-
-public class PeopleTrack {
+class PeopleTrack {
 
 	@SuppressWarnings("unchecked")
 	public static int countNewPersons(MatOfRect currentDetection, HeapList<MatOfRect> previousDetections,
@@ -33,7 +33,7 @@ public class PeopleTrack {
 		boolean result = true;
 
 		for (MatOfRect selectedDetection : previousDetections) {
-			List<Rect> rectList = selectedDetection.toList();
+			List<Rect> rectList = new ArrayList<Rect>(selectedDetection.toList());
 			for (Rect previousPerson : rectList) {
 				if (isNear(person, previousPerson, 1)) {
 					result = false;
@@ -88,6 +88,4 @@ public class PeopleTrack {
 
 		return false;
 	}
-	
-	
 }
