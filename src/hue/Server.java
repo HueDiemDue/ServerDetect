@@ -9,19 +9,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import models.ImgObject;
-
 public class Server {
 	public static void main(String[] args) {
-
 		try {
 			// mo cong ket noi
 			System.out.println("Server is running....");
@@ -47,23 +42,22 @@ public class Server {
 				// gui du lieu
 				String datetime = dateFormat.format(date);
 				System.out.println(datetime);
-				// luu file anh 
-				// send 
+				// luu file anh
+				// send
 				FileInputStream fis = new FileInputStream("D:\\hue.jpg");
-				byte[] buffer = new byte[fis.available() + 2];
+				byte[] buffer = new byte[fis.available() + 5];
 				fis.read(buffer);
-				
-				for (int i = 0; i < 3; i++) {
-					oos.writeObject(datetime);
-					oos.writeObject(buffer);
-					oos.flush();
-				}
-				oos.close();
+
+				oos.writeObject(datetime);
+				oos.writeObject(buffer);
+				oos.flush();
+
+				// }
+				// oos.close();
 
 				System.out.println("sending object done!!!");
 			}
 
-			
 			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

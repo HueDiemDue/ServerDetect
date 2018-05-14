@@ -108,14 +108,14 @@ public class DetectPerson extends JFrame {
 				} else {
 					DetectPerson fm = new DetectPerson(contentPane);
 					fm.setVisible(true);
-					detectPerson(filePathVideo, oos);
-					oos.close();
+					detectPerson(filePathVideo, oos, client);
+
+					System.out.println("sending object done!!!");
 				}
 				// gui du lieu
 
-				System.out.println("sending object done!!!");
 			}
-
+			oos.close();
 			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -124,7 +124,7 @@ public class DetectPerson extends JFrame {
 
 	}
 
-	public static void detectPerson(String filePath, ObjectOutputStream oos) throws IOException {
+	public static void detectPerson(String filePath, ObjectOutputStream oos, Socket client) throws IOException {
 		// set camera
 		Mat img = new Mat();
 		Mat mat = new Mat();
@@ -226,7 +226,6 @@ public class DetectPerson extends JFrame {
 											oos.writeObject(datetime);
 											oos.writeObject(buffer);
 											oos.flush();
-											
 
 										}
 
