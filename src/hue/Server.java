@@ -17,6 +17,10 @@ import java.util.Date;
 
 public class Server {
 	public static void main(String[] args) {
+		DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+		Date date = new Date();
+		String datetime = dateFormat.format(date);
+		System.out.println(datetime);
 		try {
 			// mo cong ket noi
 			System.out.println("Server is running....");
@@ -31,20 +35,18 @@ public class Server {
 			ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
 
 			// date now
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
-			Date date = new Date();
-
+			
 			if (is.readUTF().equals("connect")) {
 				System.out.println("Have a device connect to server!");
 				// gui di
 				os.writeUTF("Connected successfully!!");
 
 				// gui du lieu
-				String datetime = dateFormat.format(date);
-				System.out.println(datetime);
+//				String datetime = dateFormat.format(date);
+//				System.out.println(datetime);
 				// luu file anh
 				// send
-				FileInputStream fis = new FileInputStream("D:\\hue.jpg");
+				FileInputStream fis = new FileInputStream("D:\\UTC\\DoAn\\code_demo\\code_java\\ServerDetect\\data_result\\test.png");
 				byte[] buffer = new byte[fis.available() + 5];
 				fis.read(buffer);
 

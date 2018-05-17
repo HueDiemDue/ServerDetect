@@ -80,6 +80,9 @@ public class DetectPerson extends JFrame {
 	public static void main(String[] args) throws IOException {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
+		// DetectPerson fm = new DetectPerson(contentPane);
+		// fm.setVisible(true);
+		// detectPerson(filePathVideo);
 		try {
 			// mo cong ket noi
 			System.out.println("Server is running....");
@@ -94,7 +97,7 @@ public class DetectPerson extends JFrame {
 			ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
 
 			// date now
-			DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd HH:mm:ss");
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 			Date date = new Date();
 
 			if (is.readUTF().equals("connect")) {
@@ -108,14 +111,14 @@ public class DetectPerson extends JFrame {
 				} else {
 					DetectPerson fm = new DetectPerson(contentPane);
 					fm.setVisible(true);
-					detectPerson(filePathVideo, oos, client);
+					detectPerson(filePathVideo, oos);
 
 					System.out.println("sending object done!!!");
 				}
 				// gui du lieu
 
 			}
-			oos.close();
+			 oos.close();
 			client.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
@@ -124,7 +127,7 @@ public class DetectPerson extends JFrame {
 
 	}
 
-	public static void detectPerson(String filePath, ObjectOutputStream oos, Socket client) throws IOException {
+	public static void detectPerson(String filePath, ObjectOutputStream oos) throws IOException {
 		// set camera
 		Mat img = new Mat();
 		Mat mat = new Mat();
@@ -226,7 +229,6 @@ public class DetectPerson extends JFrame {
 											oos.writeObject(datetime);
 											oos.writeObject(buffer);
 											oos.flush();
-
 										}
 
 										System.out.println(" thong so : " + getPercent(image_roi));

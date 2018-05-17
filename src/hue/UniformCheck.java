@@ -103,7 +103,7 @@ public class UniformCheck extends JFrame {
 	}
 
 	private static Mat checkUniformPerson() {
-		Mat img = Imgcodecs.imread("D:\\video_do_an\\dung_1.jpg");
+		Mat img = Imgcodecs.imread("D:\\video_do_an\\dung_2.jpg");
 		Mat uniform = Imgcodecs.imread(fileUniform);
 		final HOGDescriptor hog = new HOGDescriptor();
 		final MatOfFloat descriptors = HOGDescriptor.getDefaultPeopleDetector();
