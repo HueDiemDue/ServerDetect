@@ -1,6 +1,8 @@
 package hue;
 
+import java.awt.CardLayout;
 import java.awt.Graphics;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.awt.image.DataBufferByte;
@@ -12,6 +14,7 @@ import java.util.List;
 import java.util.Vector;
 
 import javax.imageio.ImageIO;
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -35,17 +38,30 @@ public class UniformCheck extends JFrame {
 	private JFrame jFrame = new JFrame();
 	private static JPanel contentPane = new JPanel();
 	private static JLabel jLabel;
+	private static Graphics g;
+	private static String pathImg = "D:\\video_do_an\\dung_1.jpg";
 	private static String fileUniform = "D:\\UTC\\DoAn\\code_demo\\computer_vision\\detect_person\\detect_person\\uniform.png";
 
 	UniformCheck() {
 		setTitle("UniformCheck");
-		setSize(400, 600);
+		setSize(1000, 600);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(true);
 		setLocationRelativeTo(null);
+		setLayout(new GridLayout(1, 4));
+		
 
-		JLabel label1 = new JLabel(new ImageIcon(createAwtImage(checkUniformPerson())));
-		getContentPane().add(label1);
+		Mat img = Imgcodecs.imread(pathImg);
+		Mat detect_img = checkUniformPerson();
+		JLabel l1 = new JLabel(new ImageIcon(createAwtImage(img)));
+		JLabel l2 = new JLabel(new ImageIcon(createAwtImage(detect_img)));
+		JLabel l3 = new JLabel(new ImageIcon(createAwtImage(getMat(detect_img))));
+		JLabel l4 = new JLabel(new ImageIcon(createAwtImage(getMatWhite(detect_img))));
+		
+		getContentPane().add(l1);
+		getContentPane().add(l2);
+		getContentPane().add(l3);
+		getContentPane().add(l4);
 		validate();
 	}
 
@@ -57,12 +73,36 @@ public class UniformCheck extends JFrame {
 		final Scalar minBlue = new Scalar(100, 100, 0);
 		final Scalar maxBlue = new Scalar(135, 255, 255);
 		Core.inRange(imgHsv, minBlue, maxBlue, blue);
-		// Imgproc.imshow("blue", blue);
-		// ... do the same for blue, green, etc only changing the Scalar values
-		// and the Mat
 		double image_size = imgHsv.cols() * imgHsv.rows();
 		double blue_percent = ((double) Core.countNonZero(blue)) / image_size;
+		
 		return blue_percent;
+	}
+
+	private static Mat getMat(Mat img) {
+		Mat imgHsv = new Mat();
+		Imgproc.cvtColor(img, imgHsv, Imgproc.COLOR_BGR2HSV);
+		Mat blue = new Mat();
+		final Scalar minBlue = new Scalar(100, 100, 0);
+		final Scalar maxBlue = new Scalar(135, 255, 255);
+		Core.inRange(imgHsv, minBlue, maxBlue, blue);
+		double image_size = imgHsv.cols() * imgHsv.rows();
+		double blue_percent = ((double) Core.countNonZero(blue)) / image_size;
+		System.out.println("blue_percent: " + blue_percent);
+		return blue;
+	}
+	private static Mat getMatWhite(Mat img) {
+		Mat imgHsv = new Mat();
+		Imgproc.cvtColor(img, imgHsv, Imgproc.COLOR_BGR2HSV);
+		Mat white = new Mat();
+
+		final Scalar minBlue = new Scalar(50, 0,150);
+		final Scalar maxBlue = new Scalar(180, 40, 255);
+		Core.inRange(imgHsv, minBlue, maxBlue, white);
+		double image_size = imgHsv.cols() * imgHsv.rows();
+		double white_percent = ((double) Core.countNonZero(white)) / image_size;
+		System.out.println("white_percent: " + white_percent);
+		return white;
 	}
 
 	private static double checkUniform(Mat people, Mat uniformMask) {
@@ -103,7 +143,7 @@ public class UniformCheck extends JFrame {
 	}
 
 	private static Mat checkUniformPerson() {
-		Mat img = Imgcodecs.imread("D:\\video_do_an\\dung_2.jpg");
+		Mat img = Imgcodecs.imread(pathImg);
 		Mat uniform = Imgcodecs.imread(fileUniform);
 		final HOGDescriptor hog = new HOGDescriptor();
 		final MatOfFloat descriptors = HOGDescriptor.getDefaultPeopleDetector();
@@ -139,18 +179,13 @@ public class UniformCheck extends JFrame {
 
 				Imgproc.rectangle(img, rectPoint1, rectPoint2, rectColor, 2);
 				Rect rectPerson = new Rect((int) rectPoint1.x, (int) rectPoint1.y, rect.width, rect.height);
-				Mat image_roi = new Mat(img, rectPerson);
+				Mat image_roi = null;
+				image_roi = new Mat(img, rectPerson);
 
-				double check = getPercent(image_roi);
-				// double checkUniform = checkUniform(image_roi, uniform);
-
-				fontPoint.x = rect.x;
-				// illustration
-				fontPoint.y = rect.y - 4;
-				System.out.println("kq : " + check);
+				return image_roi;
 			}
-			Imgcodecs.imencode(".bmp", img, mem);
-			return img;
+			
+			return null;
 
 		}
 		return null;

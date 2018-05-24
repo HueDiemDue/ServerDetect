@@ -63,7 +63,7 @@ public class DetectPerson extends JFrame {
 		validate();
 	}
 
-	private static double getPercent(Mat img) {
+	private static double getPercentBlue(Mat img) {
 		Mat imgHsv = new Mat();
 		Imgproc.cvtColor(img, imgHsv, Imgproc.COLOR_BGR2HSV);
 		Mat blue = new Mat();
@@ -76,7 +76,18 @@ public class DetectPerson extends JFrame {
 		double blue_percent = ((double) Core.countNonZero(blue)) / image_size;
 		return blue_percent;
 	}
+	private static double getPercentWhite(Mat img) {
+		Mat imgHsv = new Mat();
+		Imgproc.cvtColor(img, imgHsv, Imgproc.COLOR_BGR2HSV);
+		Mat white = new Mat();
 
+		final Scalar minBlue = new Scalar(50, 0,150);
+		final Scalar maxBlue = new Scalar(180, 40, 255);
+		Core.inRange(imgHsv, minBlue, maxBlue, white);
+		double image_size = imgHsv.cols() * imgHsv.rows();
+		double white_percent = ((double) Core.countNonZero(white)) / image_size;
+		return white_percent;
+	}
 	public static void main(String[] args) throws IOException {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
@@ -206,9 +217,10 @@ public class DetectPerson extends JFrame {
 										rected.add(rectPerson);
 
 										Mat image_roi = new Mat(img, rectPerson);
-										double check = getPercent(image_roi);
+										double check_blue = getPercentBlue(image_roi);
+										double check_white = getPercentBlue(image_roi);
 
-										if (check > 0.05 && check < 0.09) {
+										if (check_blue > 0.05 && check_blue < 0.09 && check_white > 0.15 && check_white < 0.17) {
 											Imgproc.rectangle(img, rectPoint1, rectPoint2, trueColor, 2);
 										} else {
 											Imgproc.rectangle(img, rectPoint1, rectPoint2, falseColor, 2);
@@ -231,7 +243,7 @@ public class DetectPerson extends JFrame {
 											oos.flush();
 										}
 
-										System.out.println(" thong so : " + getPercent(image_roi));
+										System.out.println(" thong so : " + getPercentBlue(image_roi));
 
 									}
 								}
