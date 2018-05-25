@@ -41,6 +41,7 @@ public class UniformCheck extends JFrame {
 	private static Graphics g;
 	private static String pathImg = "D:\\video_do_an\\dung_1.jpg";
 	private static String fileUniform = "D:\\UTC\\DoAn\\code_demo\\computer_vision\\detect_person\\detect_person\\uniform.png";
+	private static String test = "D:\\UTC\\DoAn\\code_demo\\code_java\\ServerDetect\\data_result\\Img_1527237400141.PNG";
 
 	UniformCheck() {
 		setTitle("UniformCheck");
@@ -49,34 +50,19 @@ public class UniformCheck extends JFrame {
 		setResizable(true);
 		setLocationRelativeTo(null);
 		setLayout(new GridLayout(1, 4));
-		
 
-		Mat img = Imgcodecs.imread(pathImg);
+		Mat img = Imgcodecs.imread(test);
 		Mat detect_img = checkUniformPerson();
 		JLabel l1 = new JLabel(new ImageIcon(createAwtImage(img)));
 		JLabel l2 = new JLabel(new ImageIcon(createAwtImage(detect_img)));
 		JLabel l3 = new JLabel(new ImageIcon(createAwtImage(getMat(detect_img))));
 		JLabel l4 = new JLabel(new ImageIcon(createAwtImage(getMatWhite(detect_img))));
-		
+
 		getContentPane().add(l1);
 		getContentPane().add(l2);
 		getContentPane().add(l3);
 		getContentPane().add(l4);
 		validate();
-	}
-
-	private static double getPercent(Mat img) {
-		Mat imgHsv = new Mat();
-		Imgproc.cvtColor(img, imgHsv, Imgproc.COLOR_BGR2HSV);
-		Mat blue = new Mat();
-
-		final Scalar minBlue = new Scalar(100, 100, 0);
-		final Scalar maxBlue = new Scalar(135, 255, 255);
-		Core.inRange(imgHsv, minBlue, maxBlue, blue);
-		double image_size = imgHsv.cols() * imgHsv.rows();
-		double blue_percent = ((double) Core.countNonZero(blue)) / image_size;
-		
-		return blue_percent;
 	}
 
 	private static Mat getMat(Mat img) {
@@ -91,12 +77,13 @@ public class UniformCheck extends JFrame {
 		System.out.println("blue_percent: " + blue_percent);
 		return blue;
 	}
+
 	private static Mat getMatWhite(Mat img) {
 		Mat imgHsv = new Mat();
 		Imgproc.cvtColor(img, imgHsv, Imgproc.COLOR_BGR2HSV);
 		Mat white = new Mat();
 
-		final Scalar minBlue = new Scalar(50, 0,150);
+		final Scalar minBlue = new Scalar(50, 0, 100);
 		final Scalar maxBlue = new Scalar(180, 40, 255);
 		Core.inRange(imgHsv, minBlue, maxBlue, white);
 		double image_size = imgHsv.cols() * imgHsv.rows();
@@ -143,38 +130,28 @@ public class UniformCheck extends JFrame {
 	}
 
 	private static Mat checkUniformPerson() {
-		Mat img = Imgcodecs.imread(pathImg);
-		Mat uniform = Imgcodecs.imread(fileUniform);
+		Mat img = Imgcodecs.imread(test);
+//		Mat uniform = Imgcodecs.imread(fileUniform);
 		final HOGDescriptor hog = new HOGDescriptor();
 		final MatOfFloat descriptors = HOGDescriptor.getDefaultPeopleDetector();
 		hog.setSVMDetector(descriptors);
 		final MatOfRect foundPersons = new MatOfRect();
-		final MatOfByte mem = new MatOfByte();
 		final MatOfDouble foundWeights = new MatOfDouble();
 		final Size winStride = new Size(8, 8);
 		final Size padding = new Size(32, 32);
 		final Point rectPoint1 = new Point();
 		final Point rectPoint2 = new Point();
-		final Point fontPoint = new Point(24, 24);
 		final Scalar rectColor = new Scalar(0, 255, 0);
-		final Scalar faceColor = new Scalar(0, 0, 255);
-		final Scalar fontColor = new Scalar(255, 255, 255);
-		final Graphics g;
 
 		hog.detectMultiScale(img, foundPersons, foundWeights, 0.0, winStride, padding, 1.05, 2.0, false);
 
 		if (foundPersons.rows() > 0) {
-			final List<Double> weightList = foundWeights.toList();
 			final List<Rect> rectList = foundPersons.toList();
-			// final List<Rect> personDetected = new
-			// ArrayList<Rect>();
-			int index = 0;
 			for (final Rect rect : rectList) {
 				rectPoint1.x = rect.x;
 				rectPoint1.y = rect.y;
 				rectPoint2.x = rect.x + rect.width;
 				rectPoint2.y = rect.y + rect.height;
-				float scale = (float) ((float) (rectPoint2.x - rectPoint1.x) / (rectPoint2.y - rectPoint1.y));
 				// Draw rectangle around fond object
 
 				Imgproc.rectangle(img, rectPoint1, rectPoint2, rectColor, 2);
@@ -184,7 +161,7 @@ public class UniformCheck extends JFrame {
 
 				return image_roi;
 			}
-			
+
 			return null;
 
 		}

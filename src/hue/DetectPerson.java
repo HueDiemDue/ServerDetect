@@ -76,69 +76,71 @@ public class DetectPerson extends JFrame {
 		double blue_percent = ((double) Core.countNonZero(blue)) / image_size;
 		return blue_percent;
 	}
+
 	private static double getPercentWhite(Mat img) {
 		Mat imgHsv = new Mat();
 		Imgproc.cvtColor(img, imgHsv, Imgproc.COLOR_BGR2HSV);
 		Mat white = new Mat();
 
-		final Scalar minBlue = new Scalar(50, 0,150);
+		final Scalar minBlue = new Scalar(50, 0, 100);
 		final Scalar maxBlue = new Scalar(180, 40, 255);
 		Core.inRange(imgHsv, minBlue, maxBlue, white);
 		double image_size = imgHsv.cols() * imgHsv.rows();
 		double white_percent = ((double) Core.countNonZero(white)) / image_size;
 		return white_percent;
 	}
+
 	public static void main(String[] args) throws IOException {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-		// DetectPerson fm = new DetectPerson(contentPane);
-		// fm.setVisible(true);
-		// detectPerson(filePathVideo);
-		try {
-			// mo cong ket noi
-			System.out.println("Server is running....");
-			ServerSocket sk = new ServerSocket(7819);
-			// listen tu cong ket noi
-			Socket client = sk.accept();// cai nay no la client nhe kophai
-
-			// nhan du lieu
-			DataInputStream is = new DataInputStream(client.getInputStream());
-			DataOutputStream os = new DataOutputStream(client.getOutputStream());
-			// gui object di
-			ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
-
-			// date now
-			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-			Date date = new Date();
-
-			if (is.readUTF().equals("connect")) {
-				System.out.println("Have a device connect to server!");
-				// gui di
-				os.writeUTF("Connected successfully!!");
-
-				if (!Paths.get(filePathVideo).toFile().exists()) {
-					System.out.println("File " + filePathVideo + " does not exist!");
-					return;
-				} else {
-					DetectPerson fm = new DetectPerson(contentPane);
-					fm.setVisible(true);
-					detectPerson(filePathVideo, oos);
-
-					System.out.println("sending object done!!!");
-				}
-				// gui du lieu
-
-			}
-			 oos.close();
-			client.close();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		 DetectPerson fm = new DetectPerson(contentPane);
+		 fm.setVisible(true);
+		 detectPerson(filePathVideo);
+//		try {
+//			// mo cong ket noi
+//			System.out.println("Server is running....");
+//			ServerSocket sk = new ServerSocket(7819);
+//			// listen tu cong ket noi
+//			Socket client = sk.accept();// cai nay no la client nhe kophai
+//
+//			// nhan du lieu
+//			DataInputStream is = new DataInputStream(client.getInputStream());
+//			DataOutputStream os = new DataOutputStream(client.getOutputStream());
+//			// gui object di
+//			ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
+//
+//			// date now
+//			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+//			Date date = new Date();
+//
+//			if (is.readUTF().equals("connect")) {
+//				System.out.println("Have a device connect to server!");
+//				// gui di
+//				os.writeUTF("Connected successfully!!");
+//
+//				if (!Paths.get(filePathVideo).toFile().exists()) {
+//					System.out.println("File " + filePathVideo + " does not exist!");
+//					return;
+//				} else {
+//					DetectPerson fm = new DetectPerson(contentPane);
+//					fm.setVisible(true);
+//					detectPerson(filePathVideo, oos);
+//
+//					System.out.println("sending object done!!!");
+//				}
+//				// gui du lieu
+//
+//			}
+//			oos.close();
+//			client.close();
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 
 	}
 
-	public static void detectPerson(String filePath, ObjectOutputStream oos) throws IOException {
+	public static void detectPerson(String filePath) throws IOException {
 		// set camera
 		Mat img = new Mat();
 		Mat mat = new Mat();
@@ -172,7 +174,6 @@ public class DetectPerson extends JFrame {
 
 		Graphics g;
 		int frames = 0;
-		final List<Rect> rected = new ArrayList<>();
 
 		Point lineStartPoint = new Point(0, 450);
 		Point lineEndPoint = new Point(frameSize.width, 450);
@@ -195,7 +196,7 @@ public class DetectPerson extends JFrame {
 									false);
 
 							// draw a line
-							Imgproc.line(img, lineStartPoint, lineEndPoint, new Scalar(255, 12, 0), 2);
+							Imgproc.line(img, lineStartPoint, lineEndPoint, fontColor, 2);
 
 							if (foundPersons.rows() > 0) {
 
@@ -214,19 +215,18 @@ public class DetectPerson extends JFrame {
 									if (rectPoint2.y > 400 && rectPoint2.y < 550 && scale > 0.48 && scale < 0.52) {
 										Rect rectPerson = new Rect((int) rectPoint1.x, (int) rectPoint1.y, rect.width,
 												rect.height);
-										rected.add(rectPerson);
-
 										Mat image_roi = new Mat(img, rectPerson);
 										double check_blue = getPercentBlue(image_roi);
-										double check_white = getPercentBlue(image_roi);
+										double check_white = getPercentWhite(image_roi);
 
-										if (check_blue > 0.05 && check_blue < 0.09 && check_white > 0.15 && check_white < 0.17) {
+										if (check_blue > 0.05 && check_blue < 0.09 && check_white > 0.15) {
 											Imgproc.rectangle(img, rectPoint1, rectPoint2, trueColor, 2);
 										} else {
 											Imgproc.rectangle(img, rectPoint1, rectPoint2, falseColor, 2);
+											System.out.println(" thong so : " + check_blue + "_" + check_white);
 
 											// gui du lieu
-											System.out.println(System.currentTimeMillis());
+//											System.out.println(System.currentTimeMillis());
 											String filePathName = "data_result\\Img_" + System.currentTimeMillis()
 													+ ".png";
 
@@ -238,12 +238,12 @@ public class DetectPerson extends JFrame {
 											byte[] buffer = new byte[fis.available() + 2];
 											fis.read(buffer);
 
-											oos.writeObject(datetime);
-											oos.writeObject(buffer);
-											oos.flush();
+//											oos.writeObject(datetime);
+//											oos.writeObject(buffer);
+//											oos.flush();
 										}
 
-										System.out.println(" thong so : " + getPercentBlue(image_roi));
+									
 
 									}
 								}
