@@ -93,54 +93,54 @@ public class DetectPerson extends JFrame {
 	public static void main(String[] args) throws IOException {
 		System.loadLibrary(Core.NATIVE_LIBRARY_NAME);
 
-		 DetectPerson fm = new DetectPerson(contentPane);
-		 fm.setVisible(true);
-		 detectPerson(filePathVideo);
-//		try {
-//			// mo cong ket noi
-//			System.out.println("Server is running....");
-//			ServerSocket sk = new ServerSocket(7819);
-//			// listen tu cong ket noi
-//			Socket client = sk.accept();// cai nay no la client nhe kophai
-//
-//			// nhan du lieu
-//			DataInputStream is = new DataInputStream(client.getInputStream());
-//			DataOutputStream os = new DataOutputStream(client.getOutputStream());
-//			// gui object di
-//			ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
-//
-//			// date now
-//			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-//			Date date = new Date();
-//
-//			if (is.readUTF().equals("connect")) {
-//				System.out.println("Have a device connect to server!");
-//				// gui di
-//				os.writeUTF("Connected successfully!!");
-//
-//				if (!Paths.get(filePathVideo).toFile().exists()) {
-//					System.out.println("File " + filePathVideo + " does not exist!");
-//					return;
-//				} else {
-//					DetectPerson fm = new DetectPerson(contentPane);
-//					fm.setVisible(true);
-//					detectPerson(filePathVideo, oos);
-//
-//					System.out.println("sending object done!!!");
-//				}
-//				// gui du lieu
-//
-//			}
-//			oos.close();
-//			client.close();
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+//		 DetectPerson fm = new DetectPerson(contentPane);
+//		 fm.setVisible(true);
+//		 detectPerson(filePathVideo);
+		try {
+			// mo cong ket noi
+			System.out.println("Server is running....");
+			ServerSocket sk = new ServerSocket(7819);
+			// listen tu cong ket noi
+			Socket client = sk.accept();// cai nay no la client nhe kophai
+
+			// nhan du lieu
+			DataInputStream is = new DataInputStream(client.getInputStream());
+			DataOutputStream os = new DataOutputStream(client.getOutputStream());
+			// gui object di
+			ObjectOutputStream oos = new ObjectOutputStream(client.getOutputStream());
+
+			// date now
+			DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+			Date date = new Date();
+
+			if (is.readUTF().equals("connect")) {
+				System.out.println("Have a device connect to server!");
+				// gui di
+				os.writeUTF("Connected successfully!!");
+
+				if (!Paths.get(filePathVideo).toFile().exists()) {
+					System.out.println("File " + filePathVideo + " does not exist!");
+					return;
+				} else {
+					DetectPerson fm = new DetectPerson(contentPane);
+					fm.setVisible(true);
+					detectPerson(filePathVideo, oos);
+
+					System.out.println("sending object done!!!");
+				}
+				// gui du lieu
+
+			}
+			oos.close();
+			client.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 	}
 
-	public static void detectPerson(String filePath) throws IOException {
+	public static void detectPerson(String filePath,ObjectOutputStream oos) throws IOException {
 		// set camera
 		Mat img = new Mat();
 		Mat mat = new Mat();
@@ -238,9 +238,9 @@ public class DetectPerson extends JFrame {
 											byte[] buffer = new byte[fis.available() + 2];
 											fis.read(buffer);
 
-//											oos.writeObject(datetime);
-//											oos.writeObject(buffer);
-//											oos.flush();
+											oos.writeObject(datetime);
+											oos.writeObject(buffer);
+											oos.flush();
 										}
 
 									
