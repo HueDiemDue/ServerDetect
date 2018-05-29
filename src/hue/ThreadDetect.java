@@ -109,7 +109,7 @@ public class ThreadDetect extends Thread {
 								final List<Rect> rectList = foundPersons.toList();
 
 								float scale = 0;
-								try {
+//								try {
 									for (final Rect rect : rectList) {
 										rectPoint1.x = rect.x;
 										rectPoint1.y = rect.y;
@@ -127,37 +127,36 @@ public class ThreadDetect extends Thread {
 
 											if (check_blue > 0.05 && check_blue < 0.09 && check_white > 0.15) {
 												Imgproc.rectangle(img, rectPoint1, rectPoint2, trueColor, 2);
+												DetectPerson.checkImg = false;
 
 											} else {
 												Imgproc.rectangle(img, rectPoint1, rectPoint2, falseColor, 2);
-												// System.out.println(" thong so
-												// : " + check_blue + "_" +
-												// check_white);
+												System.out.println(" thong so: " + check_blue + "_" + check_white);
 
 												// gui du lieu
 
-												// System.out.println(System.currentTimeMillis());
+//												 System.out.println(System.currentTimeMillis());
 												String filePathName = "data_result\\Img_" + System.currentTimeMillis()
 														+ ".png";
 
 												Imgcodecs.imwrite(filePathName, image_roi);
 												String datetime = dateFormat.format(date);
-												// System.out.println(datetime);
+												 System.out.println(datetime);
 
-												DetectPerson.pathImg = filePathName;
-												DetectPerson.timer = datetime;
-												DetectPerson.checkImg = true;
-												System.out.println("Value Detect: " + DetectPerson.pathImg + "_"
-														+ DetectPerson.timer);
-
-												Thread.sleep(50);
+//												DetectPerson.pathImg = filePathName;
+//												DetectPerson.timer = datetime;
+//												DetectPerson.checkImg = true;
+//												System.out.println("Value Detect: " + DetectPerson.pathImg + "_"
+//														+ DetectPerson.timer);
+//
+//												Thread.sleep(50);
 
 											}
 										}
 									}
-								} catch (InterruptedException e) {
-									System.out.println("Thread interrupted.");
-								}
+//								} catch (InterruptedException e) {
+//									System.out.println("Thread interrupted.");
+//								}
 
 								// định dạng ảnh khi vẽ lên jpanel
 								Imgcodecs.imencode(".bmp", img, mem);
@@ -177,7 +176,7 @@ public class ThreadDetect extends Thread {
 					frames++;
 					// DetectPerson.checkImg = false;
 				}
-//				System.out.println("All frame: " + frames);
+				// System.out.println("All frame: " + frames);
 				//
 			}
 		}

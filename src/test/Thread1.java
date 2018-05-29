@@ -15,7 +15,7 @@ public class Thread1 extends Thread {
 		int i = MainThread.i;
 		int j = 0;
 		
-			while (j < 10) {
+			while (j < 20) {
 
 				for (i = 0; i < 15; i++) {
 					if (i % 3 ==0) {

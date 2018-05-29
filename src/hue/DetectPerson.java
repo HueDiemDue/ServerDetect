@@ -72,7 +72,7 @@ public class DetectPerson extends JFrame {
 		ServerSocket sk = null;
 		Socket client = null;
 		// hai thread chay song son detect va ket noi server
-		new ThreadDetect().start();
+//		new ThreadDetect().start();
 		try {
 			// mo cong ket noi
 			System.out.println("Server is running....");

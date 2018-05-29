@@ -14,6 +14,7 @@ public class Thread2 extends Thread {
 		System.out.println(MainThread.check +" thread2");
 		try {
 			while (MainThread.check == true) {
+				
 				System.out.println("Thread2: " + MainThread.test );
 				// De thread ngung trong choc lat.
 				Thread.sleep(50);
