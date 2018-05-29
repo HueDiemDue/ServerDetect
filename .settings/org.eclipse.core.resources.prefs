@@ -1,5 +1,7 @@
 eclipse.preferences.version=1
 encoding//src/hue/DetectPerson.java=UTF-8
 encoding//src/hue/Server.java=UTF-8
+encoding//src/hue/ThreadConnectServer.java=UTF-8
+encoding//src/hue/ThreadDetect.java=UTF-8
 encoding//src/hue/UniformCheck.java=UTF-8
 encoding//src/test/Benchmark.java=UTF-8

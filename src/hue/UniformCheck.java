@@ -51,7 +51,7 @@ public class UniformCheck extends JFrame {
 		setLocationRelativeTo(null);
 		setLayout(new GridLayout(1, 4));
 
-		Mat img = Imgcodecs.imread(test);
+		Mat img = Imgcodecs.imread(pathImg);
 		Mat detect_img = checkUniformPerson();
 		JLabel l1 = new JLabel(new ImageIcon(createAwtImage(img)));
 		JLabel l2 = new JLabel(new ImageIcon(createAwtImage(detect_img)));
@@ -130,7 +130,7 @@ public class UniformCheck extends JFrame {
 	}
 
 	private static Mat checkUniformPerson() {
-		Mat img = Imgcodecs.imread(test);
+		Mat img = Imgcodecs.imread(pathImg);
 //		Mat uniform = Imgcodecs.imread(fileUniform);
 		final HOGDescriptor hog = new HOGDescriptor();
 		final MatOfFloat descriptors = HOGDescriptor.getDefaultPeopleDetector();
